@@ -4,7 +4,12 @@ class App {
   async play() {
     try {
       MyUtils.Console.print("업다운 게임을 시작합니다.");
-      this.versionCheck();
+      const version = await this.versionCheck();
+
+      if (version == 1) {
+        await this.numCheck();
+      } else await this.engCheck();
+
       // <공통>
       // 버전을 입력해주세요 (숫자 버전: 1, 영어 버전: 2) :
       // 숫자(1) or 영어(2)
@@ -46,7 +51,45 @@ class App {
       // throw new error("[ERROR] 존재하지 않는 버전입니다.");
       MyUtils.Console.print("[ERROR] 존재하지 않는 버전입니다.");
     }
-    return;
+    return version;
+  }
+
+  async numCheck() {
+    MyUtils.Console.print("숫자를 입력해주세요(1 ~ 100) :");
+    const AnswerNum = Math.floor(Math.random() * 101);
+    console.log(AnswerNum);
+    const InputNum = await MyUtils.Console.readLineAsync();
+    //예외
+    if (!(1 <= InputNum && InputNum <= 100)) {
+      throw new error("[ERROR] 범위 내의 숫자를 입력하세요.");
+    }
+
+    await this.compareUntilMatch(AnswerNum, InputNum);
+  }
+
+  async engCheck() {
+    MyUtils.Console.print("영어를 입력해주세요(A ~ z) :");
+  }
+
+  //입력값과 난수 비교
+  async compareUntilMatch(answer, input) {
+    const try_count = 0;
+
+    while (answer !== input) {
+      if (answer < input) {
+        MyUtils.Console.print("DOWN");
+      } else if (answer > input) {
+        MyUtils.Console.print("UP");
+      }
+
+      // DOWN인 경우만 해당, UP인 경우도 처리해야함
+      MyUtils.Console.print(`숫자를 입력해주세요(1 ~ ${input - 1} ) :`);
+      input = await MyUtils.Console.readLineAsync();
+      try_count++;
+    }
+    // answer == input 시 while문 탈출 후 정답! 출력해야하는데 안됨
+    MyUtils.Console.print("정답!");
+    MyUtils.Console.print(`시도한 횟수 : ${try_count}회`);
   }
 }
 
