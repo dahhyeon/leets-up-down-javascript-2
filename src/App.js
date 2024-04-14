@@ -83,9 +83,9 @@ class App {
       }
 
       // DOWN인 경우만 해당, UP인 경우도 처리해야함
-      MyUtils.Console.print(`숫자를 입력해주세요(1 ~ ${input - 1} ) :`);
-      input = await MyUtils.Console.readLineAsync();
-      try_count++;
+      // MyUtils.Console.print(`숫자를 입력해주세요(1 ~ ${input - 1} ) :`);
+      // input = await MyUtils.Console.readLineAsync();
+      // try_count++;
     }
     // answer == input 시 while문 탈출 후 정답! 출력해야하는데 안됨
     MyUtils.Console.print("정답!");
