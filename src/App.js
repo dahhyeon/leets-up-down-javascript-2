@@ -58,7 +58,7 @@ class App {
     MyUtils.Console.print("숫자를 입력해주세요(1 ~ 100) :");
     const AnswerNum = Math.floor(Math.random() * 101);
     console.log(AnswerNum);
-    const InputNum = await MyUtils.Console.readLineAsync();
+    let InputNum = await MyUtils.Console.readLineAsync();
     //예외
     if (!(1 <= InputNum && InputNum <= 100)) {
       throw new error("[ERROR] 범위 내의 숫자를 입력하세요.");
@@ -73,21 +73,28 @@ class App {
 
   //입력값과 난수 비교
   async compareUntilMatch(answer, input) {
-    const try_count = 0;
+    let try_count = 0;
 
-    while (answer !== input) {
+    while (true) {
       if (answer < input) {
         MyUtils.Console.print("DOWN");
       } else if (answer > input) {
         MyUtils.Console.print("UP");
       }
 
-      // DOWN인 경우만 해당, UP인 경우도 처리해야함
-      // MyUtils.Console.print(`숫자를 입력해주세요(1 ~ ${input - 1} ) :`);
-      // input = await MyUtils.Console.readLineAsync();
-      // try_count++;
+      //DOWN인 경우만 해당, UP인 경우도 처리해야함
+      if (answer < input) {
+        MyUtils.Console.print(`숫자를 입력해주세요(1 ~ ${input - 1} ) :`);
+      } else
+        MyUtils.Console.print(
+          `숫자를 입력해주세요(${parseInt(input) + 1} ~ 100) : `
+        );
+      input = await MyUtils.Console.readLineAsync();
+      try_count++;
+
+      if (answer == input) break;
     }
-    // answer == input 시 while문 탈출 후 정답! 출력해야하는데 안됨
+
     MyUtils.Console.print("정답!");
     MyUtils.Console.print(`시도한 횟수 : ${try_count}회`);
   }
