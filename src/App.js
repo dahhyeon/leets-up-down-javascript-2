@@ -18,7 +18,6 @@ class App {
     }
   }
 
-
   async versionChoice() {
     MyUtils.Console.print("버전을 입력해주세요 (숫자 버전: 1, 영어 버전: 2) : ");
     const version = await MyUtils.Console.readLineAsync();
@@ -29,58 +28,61 @@ class App {
     const randomNumber = Math.floor(Math.random() * 100) + 1;
     let isCorrect = false;
     let tryCount = 0;
+    let minRange = 1; 
+    let maxRange = 100; 
 
     while (!isCorrect) {
-        MyUtils.Console.print("숫자를 입력해주세요(1 ~ 100) : ");
-        const userInput = await MyUtils.Console.readLineAsync();
-        tryCount++;
-        
-        if (userInput >= 1 && userInput <= 100) {
-            
-            if (parseInt(userInput) === randomNumber) {
-                MyUtils.Console.print("정답!");
-                MyUtils.Console.print(`시도 횟수: ${tryCount}`);
-                isCorrect = true;
-            } else if (parseInt(userInput) > randomNumber) {
-                MyUtils.Console.print("DOWN");
-            } else {
-                MyUtils.Console.print("UP");
-            }
-
+      MyUtils.Console.print(`숫자를 입력해주세요(${minRange} ~ ${maxRange}) : `); 
+      const userInput = await MyUtils.Console.readLineAsync();
+      tryCount++;
+      
+      if (userInput >= minRange && userInput <= maxRange) { 
+        if (parseInt(userInput) === randomNumber) {
+          MyUtils.Console.print("정답!");
+          MyUtils.Console.print(`시도 횟수: ${tryCount}`);
+          isCorrect = true;
+        } else if (parseInt(userInput) > randomNumber) {
+          MyUtils.Console.print("DOWN");
+          maxRange = parseInt(userInput) - 1; 
         } else {
-            MyUtils.Console.print("[ERROR] 입력 문자의 타입이 맞지 않습니다.");
+          MyUtils.Console.print("UP");
+          minRange = parseInt(userInput) + 1; 
         }
+      } else {
+        MyUtils.Console.print("[ERROR] 입력 문자의 타입이 맞지 않거나 범위를 벗어났습니다.");
+      }
     }
   }
 
-    async alphabetVersion() {
-      const alphabetList = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-      const randomAlphabet = alphabetList.charAt(Math.floor(Math.random() * alphabetList.length));
-      let isCorrect = false;
-      let tryCount = 0;
+  async alphabetVersion() {
+    const alphabetList = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    const randomAlphabet = alphabetList.charAt(Math.floor(Math.random() * alphabetList.length));
+
+    let isCorrect = false;
+    let tryCount = 0;
   
-      MyUtils.Console.print(`영어를 입력해주세요(A~z) : `);
+    MyUtils.Console.print(`영어를 입력해주세요(A~z) : `);
   
-      while (!isCorrect) {
-          const userInput = await MyUtils.Console.readLineAsync();
-          tryCount++;
-          const parsedInput = userInput.trim();
+    while (!isCorrect) {
+        const userInput = await MyUtils.Console.readLineAsync();
+        tryCount++;
+        const parsedInput = userInput.trim();
   
-          if (parsedInput.length === 1 && alphabetList.includes(parsedInput)) {
-              if (parsedInput === randomAlphabet) {
-                  MyUtils.Console.print("정답!");
-                  isCorrect = true;
-                  MyUtils.Console.print(`시도 횟수: ${tryCount}`);
-              } else if (parsedInput > randomAlphabet) {
-                  MyUtils.Console.print("DOWN");
+        if (parsedInput.length === 1 && alphabetList.includes(parsedInput)) {
+            if (parsedInput === randomAlphabet) {
+                 MyUtils.Console.print("정답!");
+                 isCorrect = true;
+                 MyUtils.Console.print(`시도 횟수: ${tryCount}`);
+            } else if (parsedInput > randomAlphabet) {
+                MyUtils.Console.print("DOWN");
               } else {
-                  MyUtils.Console.print("UP");
+                MyUtils.Console.print("UP");
               }
           } else {
               MyUtils.Console.print("[ERROR] 범위 내의 알파벳을 입력하세요.\n");
-          }
+            }
       }
-    }
+  }
   
 }
 
