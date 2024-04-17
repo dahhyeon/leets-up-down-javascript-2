@@ -8,7 +8,7 @@ class App {
 
       if (version == 1) {
         await this.numCheck();
-      } else await this.engCheck();
+      } else await this.alphaCheck();
 
       // <공통>
       // 버전을 입력해주세요 (숫자 버전: 1, 영어 버전: 2) :
@@ -26,6 +26,8 @@ class App {
       // 2. 숫자를 입력받는다 (InputNum)
       // 2-1. <예외> : 숫자 범위 ( 1 ~ 100 )가 아닐 시
       // [ERROR] 범위 내의 숫자를 입력하세요.
+
+      // [ERROR] 입력 문자의 타입이 맞지 않습니다.
 
       // 3. 난수와 입력받은 숫자를 비교하여
       // 난수  < 입력숫자  DOWN
@@ -56,19 +58,36 @@ class App {
 
   async numCheck() {
     MyUtils.Console.print("숫자를 입력해주세요(1 ~ 100) :");
-    const AnswerNum = Math.floor(Math.random() * 101);
-    console.log(AnswerNum);
+    const answerNum = Math.floor(Math.random() * 101);
+    console.log(answerNum);
     let InputNum = await MyUtils.Console.readLineAsync();
     //예외
     if (!(1 <= InputNum && InputNum <= 100)) {
       throw new error("[ERROR] 범위 내의 숫자를 입력하세요.");
     }
 
-    await this.compareUntilMatch(AnswerNum, InputNum);
+    await this.compareUntilMatch(answerNum, InputNum);
+    return answerNum;
   }
 
-  async engCheck() {
+  async alphaCheck() {
     MyUtils.Console.print("영어를 입력해주세요(A ~ z) :");
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    const answerIndex = Math.floor(Math.random() * alphabet.length);
+    const answerAlphabet = alphabet.charAt(answerIndex);
+    let InputAlphabet = await MyUtils.Console.readLineAsync();
+
+    //예외
+    if (InputAlphabet) {
+      throw new error("[ERROR] 범위 내의 알파벳을 입력해주세요(A ~ z) : ");
+    }
+    await this.compareUntilMatch(answerAlphabet, InputAlphabet);
+    return answerAlphabet;
+  }
+
+  //정답 리턴
+  async generateAnswer(version) {
+    return version == 1 ? answerNum : answerAlphabet;
   }
 
   //입력값과 난수 비교
@@ -82,13 +101,13 @@ class App {
         MyUtils.Console.print("UP");
       }
 
-      //DOWN인 경우만 해당, UP인 경우도 처리해야함
       if (answer < input) {
         MyUtils.Console.print(`숫자를 입력해주세요(1 ~ ${input - 1} ) :`);
       } else
         MyUtils.Console.print(
           `숫자를 입력해주세요(${parseInt(input) + 1} ~ 100) : `
         );
+      // 범위 내 숫자가 아닐 시 예외 처리
       input = await MyUtils.Console.readLineAsync();
       try_count++;
 
