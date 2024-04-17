@@ -9,7 +9,7 @@ class App {
       if (version === '1') {
         await this.numberVersion();
       } else if (version === '2') {
-        await this.englishVersion();
+        await this.alphabetVersion();
       } else {
         MyUtils.Console.print("에러났음");
       }
@@ -28,7 +28,7 @@ class App {
     async numberVersion() {
       const randomNumber = Math.floor(Math.random() * 100) + 1;
       let isCorrect = false;
-      
+
       while (!isCorrect) {
           MyUtils.Console.print("숫자를 입력해주세요(1 ~ 100) : ");
           const userInput = await MyUtils.Console.readLineAsync();
@@ -50,14 +50,33 @@ class App {
       }
     }
 
-
-
-  async englishVersion() {
-    MyUtils.Console.print("영어를 입력해주세요: ");
-    const english = await MyUtils.Console.readLineAsync();
-    return english;
-  }
-
+    async alphabetVersion() {
+      const alphabetList = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+      const randomAlphabet = alphabetList.charAt(Math.floor(Math.random() * alphabetList.length));
+      let isCorrect = false;
+  
+      MyUtils.Console.print(`영어를 입력해주세요(A~z) : `);
+  
+      while (!isCorrect) {
+          const userInput = await MyUtils.Console.readLineAsync();
+          
+          const parsedInput = userInput.trim();
+  
+          if (parsedInput.length === 1 && alphabetList.includes(parsedInput)) {
+              if (parsedInput === randomAlphabet) {
+                  MyUtils.Console.print("정답!\n");
+                  isCorrect = true;
+              } else if (parsedInput > randomAlphabet) {
+                  MyUtils.Console.print("DOWN\n");
+              } else {
+                  MyUtils.Console.print("UP\n");
+              }
+          } else {
+              MyUtils.Console.print("[ERROR] 범위 내의 알파벳을 입력하세요.\n");
+          }
+      }
+    }
+  
 }
 
 module.exports = App;
