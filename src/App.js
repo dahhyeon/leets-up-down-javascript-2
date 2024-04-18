@@ -5,42 +5,10 @@ class App {
     MyUtils.Console.print("업다운 게임을 시작합니다.");
     const version = await this.versionCheck();
 
+    this.generateAnswer();
     if (version == 1) {
       await this.numCheck();
     } else await this.alphaCheck();
-
-    // <공통>
-    // 버전을 입력해주세요 (숫자 버전: 1, 영어 버전: 2) :
-    // 숫자(1) or 영어(2)
-    // <예외>: 1, 2 외의 숫자 입력 시
-    // [ERROR] 존재하지 않는 버전입니다.
-
-    // 난수와 입력숫자가 일치할 때까지 반복
-    // 난수와 입력숫자가 일치하면 "정답!" 출력 후 종료
-    // 시도한 횟수 출력 (try_count)
-    // 시도한 횟수 : `${try_count}회`
-
-    // <숫자>
-    // 1. 난수 생성 ( AnswerNum ) Math.Random() 사용
-    // 2. 숫자를 입력받는다 (InputNum)
-    // 2-1. <예외> : 숫자 범위 ( 1 ~ 100 )가 아닐 시
-    // [ERROR] 범위 내의 숫자를 입력하세요.
-
-    // [ERROR] 입력 문자의 타입이 맞지 않습니다.
-
-    // 3. 난수와 입력받은 숫자를 비교하여
-    // 난수  < 입력숫자  DOWN
-    // 난수  > 입력숫자  UP
-
-    // <영어>
-    // 1. 난수 생성 (AnswerAlphabet) 대문자와 소문자 사이의 알파벳 임의 선택
-    // 2. 영어를 입력받는다
-    // 2-1. <예외> : 영어 범위 ( A ~ Z ) 가 아닐 시
-    // [ERROR] 범위 내의 알파벳을 입력하세요.
-    // 3. 난수와 입력받은 영어(InputAlphabet)를 비교하여
-    // 난수 < 입력값 DOWN
-    // 난수 > 입력값 UP
-    this.generateAnswer();
   }
 
   async versionCheck() {
@@ -48,7 +16,6 @@ class App {
     const version = await MyUtils.Console.readLineAsync();
     if (!(version == 1 || version == 2)) {
       throw new Error("[ERROR] 존재하지 않는 버전입니다.");
-      // MyUtils.Console.print("[ERROR] 존재하지 않는 버전입니다.");
     }
     return version;
   }
@@ -66,13 +33,8 @@ class App {
 
   async numCheck() {
     MyUtils.Console.print("숫자를 입력해주세요(1 ~ 100) :");
-    const answerNum = await this.generateAnswer();
-    // console.log(answerNum);
+    const answerNum = await this.generateAnswer(1);
     let InputNum = await MyUtils.Console.readLineAsync();
-    //예외
-    if (!(1 <= InputNum && InputNum <= 100)) {
-      throw new Error("[ERROR] 범위 내의 숫자를 입력하세요.");
-    }
 
     await this.compareUntilMatch(answerNum, InputNum);
     return answerNum;
@@ -80,57 +42,86 @@ class App {
 
   async alphaCheck() {
     MyUtils.Console.print("영어를 입력해주세요(A ~ z) :");
-    const answerAlphabet = await this.generateAnswer();
-    // console.log(answerAlphabet);
+    const answerAlphabet = await this.generateAnswer(2);
     let InputAlphabet = await MyUtils.Console.readLineAsync();
 
-    //예외
-    if (!/^[a-zA-Z]$/.test(InputAlphabet)) {
-      throw new Error("[ERROR] 범위 내의 알파벳을 입력해주세요(A ~ z) : ");
-    }
-    await this.compareUntilMatch(answerAlphabet, InputAlphabet);
+    this.compareUntilMatch(answerAlphabet, InputAlphabet);
     return answerAlphabet;
   }
 
-  //입력값과 난수 비교
+  // 입력값과 정답값 비교
   async compareUntilMatch(answer, input) {
-    let try_count = 1;
+    let try_count = 0;
 
     while (true) {
+      try_count++;
+
+      // 범위 내 숫자 혹은 영어인지 확인
+      //숫자일 때
+      if (typeof answer === "number" && typeof answer === "number") {
+        if (!(1 <= input && input <= 100)) {
+          MyUtils.Console.print("[ERROR] 범위 내의 숫자를 입력하세요.");
+          input = await MyUtils.Console.readLineAsync();
+        }
+      }
+      // 영어일 때
+      else {
+        if (!/^[A-Za-z]$/.test(input)) {
+          MyUtils.Console.print(
+            "[ERROR] 범위 내의 알파벳을 입력해주세요(A ~ z) : "
+          );
+          input = await MyUtils.Console.readLineAsync();
+        }
+      }
+
+      // 입력값이 정답값보다 클 때
+
       if (answer < input) {
         MyUtils.Console.print("DOWN");
         if (typeof answer === "number" && typeof answer === "number") {
           MyUtils.Console.print(`숫자를 입력해주세요(1 ~ ${input - 1} ):`);
-        } else
+        } else {
           MyUtils.Console.print(
             `영어를 입력해주세요(A ~ ${String.fromCharCode(
               input.charCodeAt(0) - 1
             )}):`
           );
-      } else if (answer > input) {
+        }
+        input = await MyUtils.Console.readLineAsync();
+
+        // if (!(1 <= input && input < input - 1) {
+        //   MyUtils.Console.print("[ERROR] 범위 내의 숫자를 입력하세요.");
+        // }
+      }
+      // 입력값이 정답값보다 작을 때
+      else if (answer > input) {
         MyUtils.Console.print("UP");
         if (typeof answer === "number" && typeof answer === "number") {
           MyUtils.Console.print(
             `숫자를 입력해주세요(${parseInt(input) + 1} ~ 100) : `
           );
-        } else
+        } else {
           MyUtils.Console.print(
             `영어를 입력해주세요(${String.fromCharCode(
               input.charCodeAt(0) + 1
             )} ~ z): `
           );
+        }
+        input = await MyUtils.Console.readLineAsync();
+
+        // if (!(input + 1 <= answer && answer <= 100)) {
+        //   MyUtils.Console.print("[ERROR] 범위 내의 숫자를 입력하세요.");
+        //   continue;
+        // }
       }
-
-      input = await MyUtils.Console.readLineAsync();
-      try_count++;
-
-      if (answer == input) break;
+      // 정답값 === 입력값
+      else {
+        MyUtils.Console.print("정답!");
+        MyUtils.Console.print(`시도한 횟수 : ${try_count}회`);
+        break;
+      }
     }
-    MyUtils.Console.print("정답!");
-    MyUtils.Console.print(`시도한 횟수 : ${try_count}회`);
   }
-
-  // 범위 내 숫자가 아닐 시 예외 처리
 }
 
 module.exports = App;
