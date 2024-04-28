@@ -4,9 +4,7 @@ class App {
   async play() {
     MyUtils.Console.print("업다운 게임을 시작합니다.");
     const version = await this.versionCheck();
-
     this.generateAnswer(version);
-
     this.upDownGame(version);
   }
 
@@ -34,9 +32,7 @@ class App {
     let try_count = 0;
     let inputNum, inputAlphabet;
     let answerNum = this.generateAnswer("1");
-    // console.log(answerNum);
     let answerAlphabet = this.generateAnswer("2");
-    console.log(answerAlphabet);
     let min = 1,
       max = 100;
     let minEng = "A",
@@ -49,13 +45,12 @@ class App {
           MyUtils.Console.print(`숫자를 입력해주세요(${min} ~ ${max}) :`);
           inputNum = await MyUtils.Console.readLineAsync();
           try_count++;
-          // 예외1. 입력 문자의 타입
+
           if (!inputNum.match(/^[0-9]+$/)) {
             MyUtils.Console.print("[ERROR] 입력 문자의 타입이 맞지 않습니다. ");
             continue;
           }
 
-          // 예외2. 범위 내 값 입력
           if (min > inputNum || inputNum > max) {
             MyUtils.Console.print("[ERROR] 범위 내의 숫자를 입력하세요.");
             continue;
@@ -66,12 +61,12 @@ class App {
           MyUtils.Console.print(`영어를 입력해주세요(${minEng} ~ ${maxEng}) :`);
           inputAlphabet = await MyUtils.Console.readLineAsync();
           try_count++;
-          //예외1. 입력문자의 타입
+
           if (!inputAlphabet.match(/^[A-Za-z]$/)) {
             MyUtils.Console.print("[ERROR] 입력 문자의 타입이 맞지 않습니다.");
             continue;
           }
-          //예외2. 범위 내 값 입력   -> 수정 요망
+
           if (minEng > inputAlphabet || inputAlphabet > maxEng) {
             MyUtils.Console.print("[ERROR] 범위 내의 영어를 입력하세요.");
             continue;
@@ -97,13 +92,10 @@ class App {
 
       // 영어일 경우
       else {
-        // 입력값 == 정답값
         if (String(inputAlphabet) === String(answerAlphabet)) {
           MyUtils.Console.print("정답!");
           break;
-        }
-        // 입력값 < 정답값
-        else if (String(inputAlphabet) < String(answerAlphabet)) {
+        } else if (String(inputAlphabet) < String(answerAlphabet)) {
           MyUtils.Console.print("UP");
           minEng = String.fromCharCode(inputAlphabet.charCodeAt(0) + 1);
           console.log(minEng);
