@@ -216,7 +216,7 @@ describe("업다운", () => {
   test("숫자 버전 - 1 ~ 100 사이의 난수 생성", () => {
     const app = new App();
     for (let i = 0; i < 100; i++) {
-      const answer = app.generateAnswer(1);
+      const answer = app.generateAnswer("1");
       expect(answer).toBeGreaterThanOrEqual(1);
       expect(answer).toBeLessThanOrEqual(100);
     }
@@ -225,7 +225,7 @@ describe("업다운", () => {
   test("영어 버전 - 대문자와 소문자 사이의 알파벳 임의 선택", () => {
     const app = new App();
     for (let i = 0; i < 100; i++) {
-      const answer = app.generateAnswer(2);
+      const answer = app.generateAnswer("2");
       expect(answer).toMatch(/^[A-Za-z]$/);
     }
   });
