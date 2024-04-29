@@ -2,10 +2,10 @@ const MyUtils = require("../Utils/MyUtils");
 
 class App {
   async play() {
-    MyUtils.Console.print("업다운 게임을 시작합니다.");
+    MyUtils.Console.print("업다운 게임을 시작합니다.\n");
     const version = await this.versionCheck();
-    this.generateAnswer(version);
-    this.upDownGame(version);
+    const answer = this.generateAnswer(version);
+    this.upDownGame(version, answer);
   }
 
   async versionCheck() {
@@ -28,15 +28,16 @@ class App {
     }
   }
 
-  async upDownGame(version) {
+  async upDownGame(version, answer) {
     let try_count = 0;
     let inputNum, inputAlphabet;
-    let answerNum = this.generateAnswer("1");
-    let answerAlphabet = this.generateAnswer("2");
-    let min = 1,
-      max = 100;
-    let minEng = "A",
-      maxEng = "z";
+    let min, max;
+    let minEng, maxEng;
+    if (version === "1") {
+      (min = 1), (max = 100);
+    } else {
+      (minEng = "A"), (maxEng = "z");
+    }
 
     while (true) {
       //숫자일 때
@@ -78,10 +79,10 @@ class App {
 
       // 숫자일 경우
       if (version === "1") {
-        if (parseInt(inputNum) === parseInt(answerNum)) {
+        if (parseInt(inputNum) === parseInt(answer)) {
           MyUtils.Console.print("정답!");
           break;
-        } else if (parseInt(inputNum) < parseInt(answerNum)) {
+        } else if (parseInt(inputNum) < parseInt(answer)) {
           MyUtils.Console.print("UP");
           min = parseInt(inputNum) + 1;
         } else {
@@ -92,17 +93,15 @@ class App {
 
       // 영어일 경우
       else {
-        if (String(inputAlphabet) === String(answerAlphabet)) {
+        if (String(inputAlphabet) === String(answer)) {
           MyUtils.Console.print("정답!");
           break;
-        } else if (String(inputAlphabet) < String(answerAlphabet)) {
+        } else if (String(inputAlphabet) < String(answer)) {
           MyUtils.Console.print("UP");
           minEng = String.fromCharCode(inputAlphabet.charCodeAt(0) + 1);
-          console.log(minEng);
         } else {
           MyUtils.Console.print("DOWN");
           maxEng = String.fromCharCode(inputAlphabet.charCodeAt(0) - 1);
-          console.log(maxEng);
         }
       }
     }
